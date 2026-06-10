@@ -33,12 +33,12 @@
             border-radius: 0 0 10px 10px;
         }
 
-        /* Contenedor principal de la tarjeta */
+        /* Contenedor principal de la tarjeta: Se redujo la altura y el ancho máximo */
         .card {
             background: #1a1a24;
-            width: 95%;
-            height: 95vh;
-            max-width: 420px;
+            width: 92%;
+            height: 88vh; /* Se redujo para que se vea más pequeña */
+            max-width: 380px; /* Ligeramente más angosta */
             border-radius: 20px;
             border: 1px solid #333;
             box-shadow: 0 15px 35px rgba(0,0,0,0.9);
@@ -49,35 +49,36 @@
 
         .header {
             background: #ff4500;
-            padding: 15px;
+            padding: 12px; /* Se redujo el espacio superior */
             text-align: center;
             font-weight: 900;
             letter-spacing: 2px;
             text-transform: uppercase;
-            font-size: 15px;
+            font-size: 14px;
             flex-shrink: 0;
         }
 
         .profile-section {
-            padding: 20px 15px;
+            padding: 15px 10px 10px 10px; /* Se redujeron los espacios internos */
             text-align: center;
             background: linear-gradient(180deg, #2a2a35 0%, #1a1a24 100%);
             border-bottom: 1px solid #333;
             flex-shrink: 0;
         }
 
+        /* Foto más pequeña para ahorrar espacio vertical */
         .photo {
-            width: 110px;
-            height: 110px;
+            width: 85px; 
+            height: 85px;
             border-radius: 50%;
-            border: 4px solid #ff4500;
+            border: 3px solid #ff4500;
             object-fit: cover;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             box-shadow: 0 5px 15px rgba(255, 69, 0, 0.3);
         }
 
         .name {
-            font-size: 26px;
+            font-size: 22px; /* Letra un poco más pequeña */
             font-weight: 800;
             margin: 0;
             text-transform: uppercase;
@@ -87,25 +88,25 @@
             display: inline-block;
             background: rgba(255, 69, 0, 0.2);
             color: #ffaa80;
-            padding: 6px 15px;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 11px;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 6px;
             border: 1px solid rgba(255, 69, 0, 0.5);
         }
 
         .physical-stats {
             display: flex;
             justify-content: space-around;
-            margin-top: 15px;
-            padding-top: 15px;
+            margin-top: 10px;
+            padding-top: 10px;
             border-top: 1px solid #333;
         }
 
         .p-stat { display: flex; flex-direction: column; }
-        .p-value { font-size: 20px; font-weight: bold; color: #fff; }
-        .p-label { font-size: 12px; color: #888; text-transform: uppercase; margin-top: 4px; }
+        .p-value { font-size: 18px; font-weight: bold; color: #fff; }
+        .p-label { font-size: 11px; color: #888; text-transform: uppercase; margin-top: 2px; }
 
         .tabs {
             display: flex;
@@ -116,26 +117,26 @@
 
         .tab-btn {
             flex: 1;
-            padding: 15px 0;
+            padding: 12px 0; /* Botones de pestañas más compactos */
             background: none;
             border: none;
             color: #888;
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
-            font-size: 14px;
+            font-size: 13px;
             text-transform: uppercase;
         }
 
         .tab-btn.active {
             color: #ff4500;
-            border-bottom: 4px solid #ff4500;
+            border-bottom: 3px solid #ff4500;
             background: rgba(255, 69, 0, 0.08);
         }
 
         .tab-content {
             display: none;
-            padding: 20px 20px 30px 20px;
+            padding: 15px 15px 20px 15px; /* Menos margen interno para mostrar más contenido */
             flex: 1;
             overflow-y: auto;
         }
@@ -143,40 +144,41 @@
         .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .skill-bar-container { margin-bottom: 18px; }
-        .skill-header { display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 8px; font-weight: bold;}
-        .skill-track { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
-        .skill-fill { background: #ff4500; height: 100%; border-radius: 5px; transition: width 1s ease-in-out;}
+        /* Ajustes en las barras para que se vean las 4 a la vez */
+        .skill-bar-container { margin-bottom: 12px; } /* Menos separación entre barras */
+        .skill-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; font-weight: bold;}
+        .skill-track { background: #333; height: 8px; border-radius: 4px; overflow: hidden; } /* Barra más delgada */
+        .skill-fill { background: #ff4500; height: 100%; border-radius: 4px; transition: width 1s ease-in-out;}
 
         .list-item {
             background: #222;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
-            margin-bottom: 12px;
-            font-size: 15px;
-            border-left: 4px solid #ff4500;
+            margin-bottom: 10px;
+            font-size: 14px;
+            border-left: 3px solid #ff4500;
             color: #eee;
-            line-height: 1.5;
+            line-height: 1.4;
             white-space: pre-line; 
         }
 
         .coach-note {
             background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
-            font-size: 15px;
-            line-height: 1.6;
+            font-size: 14px;
+            line-height: 1.5;
             color: #ddd;
             font-style: italic;
             position: relative;
             white-space: pre-line;
         }
         
-        .coach-note::before { content: '"'; font-size: 40px; color: #ff4500; position: absolute; top: -5px; left: 10px; opacity: 0.3; }
+        .coach-note::before { content: '"'; font-size: 35px; color: #ff4500; position: absolute; top: -5px; left: 10px; opacity: 0.3; }
 
-        .date-badge { display: block; font-size: 13px; color: #ffaa80; margin-bottom: 10px; font-weight: bold; font-style: normal; text-transform: uppercase; }
+        .date-badge { display: block; font-size: 12px; color: #ffaa80; margin-bottom: 8px; font-weight: bold; font-style: normal; text-transform: uppercase; }
 
-        .tab-content::-webkit-scrollbar { width: 6px; }
+        .tab-content::-webkit-scrollbar { width: 4px; }
         .tab-content::-webkit-scrollbar-track { background: #1a1a24; }
         .tab-content::-webkit-scrollbar-thumb { background: #ff4500; border-radius: 10px; }
 
