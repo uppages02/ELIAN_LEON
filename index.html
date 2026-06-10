@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Card | Entrenamiento Personalizado</title>
+    <style>
+        /* Estilos generales y bloqueo del scroll general */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0d0d0d;
+            margin: 0;
+            padding: 0;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #loading {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: bold;
+            color: #ffaa80;
+            z-index: 100;
+            background: rgba(0,0,0,0.8);
+            padding: 5px 15px;
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* Contenedor principal de la tarjeta */
+        .card {
+            background: #1a1a24;
+            width: 95%;
+            height: 95vh;
+            max-width: 420px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #ff4500;
+            padding: 15px;
+            text-align: center;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .profile-section {
+            padding: 20px 15px;
+            text-align: center;
+            background: linear-gradient(180deg, #2a2a35 0%, #1a1a24 100%);
+            border-bottom: 1px solid #333;
+            flex-shrink: 0;
+        }
+
+        .photo {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 4px solid #ff4500;
+            object-fit: cover;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 15px rgba(255, 69, 0, 0.3);
+        }
+
+        .name {
+            font-size: 26px;
+            font-weight: 800;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .schedule-badge {
+            display: inline-block;
+            background: rgba(255, 69, 0, 0.2);
+            color: #ffaa80;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 69, 0, 0.5);
+        }
+
+        .physical-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+
+        .p-stat { display: flex; flex-direction: column; }
+        .p-value { font-size: 20px; font-weight: bold; color: #fff; }
+        .p-label { font-size: 12px; color: #888; text-transform: uppercase; margin-top: 4px; }
+
+        .tabs {
+            display: flex;
+            background: #111;
+            border-bottom: 1px solid #333;
+            flex-shrink: 0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px 0;
+            background: none;
+            border: none;
+            color: #888;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .tab-btn.active {
+            color: #ff4500;
+            border-bottom: 4px solid #ff4500;
+            background: rgba(255, 69, 0, 0.08);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px 20px 30px 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .skill-bar-container { margin-bottom: 18px; }
+        .skill-header { display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 8px; font-weight: bold;}
+        .skill-track { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
+        .skill-fill { background: #ff4500; height: 100%; border-radius: 5px; transition: width 1s ease-in-out;}
+
+        .list-item {
+            background: #222;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            border-left: 4px solid #ff4500;
+            color: #eee;
+            line-height: 1.5;
+            white-space: pre-line; 
+        }
+
+        .coach-note {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #ddd;
+            font-style: italic;
+            position: relative;
+            white-space: pre-line;
+        }
+        
+        .coach-note::before { content: '"'; font-size: 40px; color: #ff4500; position: absolute; top: -5px; left: 10px; opacity: 0.3; }
+
+        .date-badge { display: block; font-size: 13px; color: #ffaa80; margin-bottom: 10px; font-weight: bold; font-style: normal; text-transform: uppercase; }
+
+        .tab-content::-webkit-scrollbar { width: 6px; }
+        .tab-content::-webkit-scrollbar-track { background: #1a1a24; }
+        .tab-content::-webkit-scrollbar-thumb { background: #ff4500; border-radius: 10px; }
+
+    </style>
+</head>
+<body>
+
+    <div id="loading">Actualizando stats...</div>
+
+    <div class="card" id="player-card">
+        <div class="header">Desarrollo Individual</div>
+        
+        <!-- ========================================== -->
+        <!-- DATOS FIJOS DEL JUGADOR -->
+        <!-- ========================================== -->
+        <div class="profile-section">
+            <img src="https://via.placeholder.com/150/333333/FFFFFF?text=Foto" alt="Jugador" class="photo">
+            <h2 class="name">Elian Matias lopez leon</h2>
+             <div class="schedule-badge">EDAD 11 AÑOS</div>
+            <div class="schedule-badge">🗓️ Entrena: Martes y Jueves</div>
+            
+            <div class="physical-stats">
+                <div class="p-stat">
+                    <span class="p-value">1.56 m</span>
+                    <span class="p-label">Talla</span>
+                </div>
+                <div class="p-stat">
+                    <span class="p-value">41 kg</span>
+                    <span class="p-label">Peso</span>
+                </div>
+                <div class="p-stat">
+                    <span class="p-value">BASE</span>
+                    <span class="p-label">Posición</span>
+                </div>
+            </div>
+        </div>
+        <!-- ========================================== -->
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('skills', this)">Reporte</button>
+            <button class="tab-btn" onclick="openTab('avances', this)">Avances</button>
+            <button class="tab-btn" onclick="openTab('observaciones', this)">Observación</button>
+        </div>
+
+        <div id="skills" class="tab-content active">
+            <div class="skill-bar-container">
+                <div class="skill-header"><span>Mecánica de Tiro</span> <span id="txt-tiro">0%</span></div>
+                <div class="skill-track"><div class="skill-fill" id="bar-tiro" style="width: 0%;"></div></div>
+            </div>
+            <div class="skill-bar-container">
+                <div class="skill-header"><span>Drible</span> <span id="txt-drible">0%</span></div>
+                <div class="skill-track"><div class="skill-fill" id="bar-drible" style="width: 0%;"></div></div>
+            </div>
+            <div class="skill-bar-container">
+                <div class="skill-header"><span>Tiro en Suspensión</span> <span id="txt-suspension">0%</span></div>
+                <div class="skill-track"><div class="skill-fill" id="bar-suspension" style="width: 0%;"></div></div>
+            </div>
+            <div class="skill-bar-container">
+                <div class="skill-header"><span>Finalización</span> <span id="txt-finalizacion">0%</span></div>
+                <div class="skill-track"><div class="skill-fill" id="bar-finalizacion" style="width: 0%;"></div></div>
+            </div>
+        </div>
+
+        <div id="avances" class="tab-content">
+            <div class="list-item" id="val-avances">Cargando avances...</div>
+        </div>
+
+        <div id="observaciones" class="tab-content">
+            <div class="coach-note">
+                <span class="date-badge" id="val-fecha">Última sesión: --</span>
+                <span id="val-observaciones">Cargando observaciones...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // PEGA AQUÍ EL ID DEL GOOGLE SHEET DE ESTE JUGADOR EN ESPECÍFICO
+        const SHEET_ID = '10v0m1ppb7sxOe0bKwP_dHFGHVCGPfAkMSyZppCPpVaI'; 
+        // ==========================================
+
+        function openTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        async function cargarDatos() {
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+            try {
+                const respuesta = await fetch(url);
+                const texto = await respuesta.text();
+                const datosJson = JSON.parse(texto.substring(47).slice(0, -2));
+                const filas = datosJson.table.rows;
+
+                // Como es un sheet individual, tomamos directamente la primera fila de datos (índice 0)
+                if (filas.length > 0) {
+                    let stats = filas[0].c;
+
+                    // Cargar las 4 barras de habilidades (Columnas A, B, C, D)
+                    let tiro = stats[0]?.v || 0;
+                    let drible = stats[1]?.v || 0;
+                    let suspension = stats[2]?.v || 0;
+                    let finalizacion = stats[3]?.v || 0;
+
+                    document.getElementById('txt-tiro').innerText = tiro + '%';
+                    document.getElementById('bar-tiro').style.width = tiro + '%';
+                    
+                    document.getElementById('txt-drible').innerText = drible + '%';
+                    document.getElementById('bar-drible').style.width = drible + '%';
+                    
+                    document.getElementById('txt-suspension').innerText = suspension + '%';
+                    document.getElementById('bar-suspension').style.width = suspension + '%';
+
+                    document.getElementById('txt-finalizacion').innerText = finalizacion + '%';
+                    document.getElementById('bar-finalizacion').style.width = finalizacion + '%';
+
+                    // Cargar los textos (Columnas E, F, G)
+                    document.getElementById('val-avances').innerText = stats[4]?.v || 'Sin registros.';
+                    document.getElementById('val-fecha').innerText = "Última sesión: " + (stats[5]?.v || '--');
+                    document.getElementById('val-observaciones').innerText = stats[6]?.v || 'Sin observaciones.';
+                    
+                    document.getElementById('loading').style.display = 'none';
+                } else {
+                    document.getElementById('loading').innerText = "⚠️ El Excel está vacío (llena la fila 2).";
+                }
+
+            } catch (error) {
+                document.getElementById('loading').innerText = "⚠️ Error al conectar. Verifica que el Sheet sea público.";
+                console.error(error);
+            }
+        }
+
+        cargarDatos();
+    </script>
+</body>
+</html>
