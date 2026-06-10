@@ -33,12 +33,12 @@
             border-radius: 0 0 10px 10px;
         }
 
-        /* Contenedor principal de la tarjeta: Se redujo la altura y el ancho máximo */
+        /* Contenedor principal */
         .card {
             background: #1a1a24;
             width: 92%;
-            height: 88vh; /* Se redujo para que se vea más pequeña */
-            max-width: 380px; /* Ligeramente más angosta */
+            height: 88vh; 
+            max-width: 380px; 
             border-radius: 20px;
             border: 1px solid #333;
             box-shadow: 0 15px 35px rgba(0,0,0,0.9);
@@ -49,7 +49,7 @@
 
         .header {
             background: #ff4500;
-            padding: 12px; /* Se redujo el espacio superior */
+            padding: 12px; 
             text-align: center;
             font-weight: 900;
             letter-spacing: 2px;
@@ -59,14 +59,13 @@
         }
 
         .profile-section {
-            padding: 15px 10px 10px 10px; /* Se redujeron los espacios internos */
+            padding: 15px 10px 10px 10px; 
             text-align: center;
             background: linear-gradient(180deg, #2a2a35 0%, #1a1a24 100%);
             border-bottom: 1px solid #333;
             flex-shrink: 0;
         }
 
-        /* Foto más pequeña para ahorrar espacio vertical */
         .photo {
             width: 85px; 
             height: 85px;
@@ -78,7 +77,7 @@
         }
 
         .name {
-            font-size: 22px; /* Letra un poco más pequeña */
+            font-size: 22px; 
             font-weight: 800;
             margin: 0;
             text-transform: uppercase;
@@ -117,7 +116,7 @@
 
         .tab-btn {
             flex: 1;
-            padding: 12px 0; /* Botones de pestañas más compactos */
+            padding: 12px 0; 
             background: none;
             border: none;
             color: #888;
@@ -136,7 +135,7 @@
 
         .tab-content {
             display: none;
-            padding: 15px 15px 20px 15px; /* Menos margen interno para mostrar más contenido */
+            padding: 15px 15px 20px 15px; 
             flex: 1;
             overflow-y: auto;
         }
@@ -144,10 +143,9 @@
         .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Ajustes en las barras para que se vean las 4 a la vez */
-        .skill-bar-container { margin-bottom: 12px; } /* Menos separación entre barras */
+        .skill-bar-container { margin-bottom: 12px; } 
         .skill-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; font-weight: bold;}
-        .skill-track { background: #333; height: 8px; border-radius: 4px; overflow: hidden; } /* Barra más delgada */
+        .skill-track { background: #333; height: 8px; border-radius: 4px; overflow: hidden; } 
         .skill-fill { background: #ff4500; height: 100%; border-radius: 4px; transition: width 1s ease-in-out;}
 
         .list-item {
@@ -172,6 +170,7 @@
             font-style: italic;
             position: relative;
             white-space: pre-line;
+            margin-bottom: 12px;
         }
         
         .coach-note::before { content: '"'; font-size: 35px; color: #ff4500; position: absolute; top: -5px; left: 10px; opacity: 0.3; }
@@ -191,9 +190,7 @@
     <div class="card" id="player-card">
         <div class="header">Desarrollo Individual</div>
         
-        <!-- ========================================== -->
         <!-- DATOS FIJOS DEL JUGADOR -->
-        <!-- ========================================== -->
         <div class="profile-section">
             <img src="https://imgur.com/taQt1Sq.jpg" alt="Jugador" class="photo">
             <h2 class="name">Elian Matias lopez leon</h2>
@@ -215,7 +212,6 @@
                 </div>
             </div>
         </div>
-        <!-- ========================================== -->
 
         <div class="tabs">
             <button class="tab-btn active" onclick="openTab('skills', this)">Reporte</button>
@@ -242,21 +238,15 @@
             </div>
         </div>
 
-        <div id="avances" class="tab-content">
-            <div class="list-item" id="val-avances">Cargando avances...</div>
-        </div>
+        <!-- Aquí se inyectarán las listas automáticamente -->
+        <div id="avances" class="tab-content"></div>
+        <div id="observaciones" class="tab-content"></div>
 
-        <div id="observaciones" class="tab-content">
-            <div class="coach-note">
-                <span class="date-badge" id="val-fecha">Última sesión: --</span>
-                <span id="val-observaciones">Cargando observaciones...</span>
-            </div>
-        </div>
     </div>
 
     <script>
         // ==========================================
-        // PEGA AQUÍ EL ID DEL GOOGLE SHEET DE ESTE JUGADOR EN ESPECÍFICO
+        // PEGA AQUÍ EL ID DEL GOOGLE SHEET DE ESTE JUGADOR
         const SHEET_ID = '10v0m1ppb7sxOe0bKwP_dHFGHVCGPfAkMSyZppCPpVaI'; 
         // ==========================================
 
@@ -276,16 +266,40 @@
                 const datosJson = JSON.parse(texto.substring(47).slice(0, -2));
                 const filas = datosJson.table.rows;
 
-                // Como es un sheet individual, tomamos directamente la primera fila de datos (índice 0)
                 if (filas.length > 0) {
-                    let stats = filas[0].c;
+                    
+                    let tiro = 0, drible = 0, suspension = 0, finalizacion = 0;
+                    let htmlAvances = "";
+                    let htmlObservaciones = "";
 
-                    // Cargar las 4 barras de habilidades (Columnas A, B, C, D)
-                    let tiro = stats[0]?.v || 0;
-                    let drible = stats[1]?.v || 0;
-                    let suspension = stats[2]?.v || 0;
-                    let finalizacion = stats[3]?.v || 0;
+                    // Recorrer TODAS las filas que hayas escrito en el Excel
+                    for (let i = 0; i < filas.length; i++) {
+                        let row = filas[i].c;
 
+                        // 1. ACTUALIZAR PORCENTAJES (Tomará los números de la última fila que tenga números)
+                        if (row[0] && row[0].v !== null) tiro = row[0].v;
+                        if (row[1] && row[1].v !== null) drible = row[1].v;
+                        if (row[2] && row[2].v !== null) suspension = row[2].v;
+                        if (row[3] && row[3].v !== null) finalizacion = row[3].v;
+
+                        // 2. CREAR BLOQUES DE AVANCES (Si la columna E tiene texto)
+                        if (row[4] && row[4].v) {
+                            htmlAvances += `<div class="list-item">${row[4].v}</div>`;
+                        }
+
+                        // 3. CREAR BLOQUES DE OBSERVACIONES (Si la columna G tiene texto)
+                        if (row[6] && row[6].v) {
+                            let fecha = (row[5] && row[5].v) ? row[5].v : "Sin fecha";
+                            htmlObservaciones += `
+                                <div class="coach-note">
+                                    <span class="date-badge">Sesión: ${fecha}</span>
+                                    ${row[6].v}
+                                </div>
+                            `;
+                        }
+                    }
+
+                    // Inyectar los porcentajes finales en las barras
                     document.getElementById('txt-tiro').innerText = tiro + '%';
                     document.getElementById('bar-tiro').style.width = tiro + '%';
                     
@@ -298,14 +312,16 @@
                     document.getElementById('txt-finalizacion').innerText = finalizacion + '%';
                     document.getElementById('bar-finalizacion').style.width = finalizacion + '%';
 
-                    // Cargar los textos (Columnas E, F, G)
-                    document.getElementById('val-avances').innerText = stats[4]?.v || 'Sin registros.';
-                    document.getElementById('val-fecha').innerText = "Última sesión: " + (stats[5]?.v || '--');
-                    document.getElementById('val-observaciones').innerText = stats[6]?.v || 'Sin observaciones.';
+                    // Inyectar todo el historial construido
+                    if (htmlAvances === "") htmlAvances = '<div class="list-item">Sin avances registrados.</div>';
+                    document.getElementById('avances').innerHTML = htmlAvances;
+
+                    if (htmlObservaciones === "") htmlObservaciones = '<div class="coach-note">Sin observaciones.</div>';
+                    document.getElementById('observaciones').innerHTML = htmlObservaciones;
                     
                     document.getElementById('loading').style.display = 'none';
                 } else {
-                    document.getElementById('loading').innerText = "⚠️ El Excel está vacío (llena la fila 2).";
+                    document.getElementById('loading').innerText = "⚠️ El Excel está vacío (llena desde la fila 2).";
                 }
 
             } catch (error) {
